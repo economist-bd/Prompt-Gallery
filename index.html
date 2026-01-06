@@ -120,7 +120,64 @@
     </div>
     <div class="gallery" id="gallery"></div>
 
-    <script>
+
+      <script>
+    function nl2br(text) {
+        return text.replace(/\n/g, "<br>");
+    }
+
+    function createCard(image, prompt) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <div class="thumb">
+              <img src="${image}" alt="Prompt image" loading="lazy" />
+            </div>
+            <div class="prompt-header">
+              <span class="emoji">🕺</span>
+              <span>Eye-catching prompt</span>
+            </div>
+            <div class="prompt">${nl2br(prompt)}</div>
+            <div class="actions">
+              <button class="small-btn" onclick="copyPrompt(this)">Copy</button>
+              <button class="small-btn secondary" onclick="sharePrompt(this)">Share</button>
+            </div>
+        `;
+        return card;
+    }
+
+    function addCard() {
+        const imageUrl = document.getElementById('imageUrl').value;
+        const promptText = document.getElementById('promptText').value;
+        if (imageUrl && promptText) {
+            const card = createCard(imageUrl, promptText);
+            document.getElementById('gallery').prepend(card);
+            document.getElementById('imageUrl').value = '';
+            document.getElementById('promptText').value = '';
+        }
+    }
+
+    function copyPrompt(btn) {
+        const text = btn.parentElement.previousElementSibling.innerText;
+        navigator.clipboard.writeText(text);
+        alert("Prompt copied!");
+    }
+
+    function sharePrompt(btn) {
+        const text = btn.parentElement.previousElementSibling.innerText;
+        if (navigator.share) {
+            navigator.share({ text });
+        } else {
+            alert("Sharing not supported on this device.");
+        }
+    }
+
+    // সব প্রম্পট একসাথে লোড হবে
+    window.onload = () => {
+        const gallery = document.getElementById('gallery');
+        const placeholder = "https://via.placeholder.com/600x375?text=4D+Style";
+
+        // এখানে তোমার সব প্রম্পট সিরিয়ালে দিয়ে দাও
         const prompts = [
             "A futuristic male model in neon-lit cyberpunk city",
             "A modern man in a sleek black suit under city lights",
@@ -172,9 +229,7 @@
             "A man with a floating keyboard and screens",
             "A male monk with glowing tattoos",
             "A man in a 4D fractal temple"
-        ];
-        const newPrompts = [
-  "Ultra-realistic portrait with neon rim light, cinematic depth, vibrant color grading, eye magnet framing",
+            "Ultra-realistic portrait with neon rim light, cinematic depth, vibrant color grading, eye magnet framing",
   "High-fashion editorial, glossy textures, bold shadows, spotlight drama, magazine cover energy",
   "Cyberpunk street scene, holographic overlays, rain-soaked neon, reflective puddles, bokeh-rich glow",
   "Golden hour rooftop, warm lens flare, soft wind motion, cinematic crop, hero presence",
@@ -225,73 +280,15 @@
   "Desert explorer, robotic camel, glowing horizon, cinematic grade",
   "Studio editorial crisp, edge light precision, sculpted jawline",
   "Neon jungle explorer, glowing plants, cybernetic eye, trench coat"
-];
+        ];
 
+        prompts.forEach(p => {
+            const card = createCard(placeholder, p);
+            gallery.appendChild(card);
+        });
+    };
+</script>
 
-       function createCard(image, prompt) {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.innerHTML = `
-    <div class="thumb">
-      <img src="${image}" alt="Prompt image" loading="lazy" />
-    </div>
-    <div class="prompt-header">
-      <span class="emoji">🕺</span>
-      <span>Eye-catching prompt</span>
-    </div>
-    <div class="prompt">${nl2br(prompt)}</div>
-    <div class="actions">
-      <button class="small-btn" onclick="copyPrompt(this)">Copy</button>
-      <button class="small-btn secondary" onclick="sharePrompt(this)">Share</button>
-    </div>
-  `;
-  return card;
-}
-
-
-        function addCard() {
-            const imageUrl = document.getElementById('imageUrl').value;
-            const promptText = document.getElementById('promptText').value;
-            if (imageUrl && promptText) {
-                const card = createCard(imageUrl, promptText);
-                document.getElementById('gallery').prepend(card);
-                document.getElementById('imageUrl').value = '';
-                document.getElementById('promptText').value = '';
-            }
-        }
-
-        function copyPrompt(btn) {
-            const text = btn.parentElement.previousElementSibling.innerText;
-            navigator.clipboard.writeText(text);
-            alert("Prompt copied!");
-        }
-
-        function sharePrompt(btn) {
-            const text = btn.parentElement.previousElementSibling.innerText;
-            if (navigator.share) {
-                navigator.share({ text });
-            } else {
-                alert("Sharing not supported on this device.");
-            }
-        }
-
-        // Load initial 50 prompts with placeholder image
-        window.onload = () => {
-            const gallery = document.getElementById('gallery');
-            prompts.forEach(p => {
-                const card = createCard("https://via.placeholder.com/300x200?text=4D+Style", p);
-                gallery.appendChild(card);
-            });
-        };
-        // Load the additional 50 prompts with placeholder image
-(function(){
-  const placeholder = "https://via.placeholder.com/600x375?text=4D+Style";
-  newPrompts.forEach(p=>{
-    gallery.appendChild(createCard(placeholder, p));
-  });
-})();
-
-    </script>
     
 </body>
 </html>
