@@ -82,6 +82,33 @@
             border-radius: 5px;
             font-size: 0.8rem;
         }
+        /* Dancing emoji animation */
+.emoji {
+  font-size: 1.3rem;
+  display: inline-block;
+  margin-right: 6px;
+  filter: drop-shadow(0 2px 6px rgba(124,92,255,.35));
+  animation: dance 1s infinite ease-in-out;
+}
+@keyframes dance {
+  0% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(-6deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(-2px) rotate(6deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* Optional: a small header above prompt area */
+.prompt-header {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .6rem .9rem .2rem;
+  color: #cfd5ff;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
     </style>
 </head>
 <body>
@@ -146,20 +173,81 @@
             "A male monk with glowing tattoos",
             "A man in a 4D fractal temple"
         ];
+        const newPrompts = [
+  "Ultra-realistic portrait with neon rim light, cinematic depth, vibrant color grading, eye magnet framing",
+  "High-fashion editorial, glossy textures, bold shadows, spotlight drama, magazine cover energy",
+  "Cyberpunk street scene, holographic overlays, rain-soaked neon, reflective puddles, bokeh-rich glow",
+  "Golden hour rooftop, warm lens flare, soft wind motion, cinematic crop, hero presence",
+  "Minimal studio grade, gradient backdrop, sculpted edge lighting, premium skin texture",
+  "Rainy alley mystique, translucent umbrella, teal-orange reflections, moody atmosphere",
+  "Streetwear editorial, graffiti wall, bold color blocks, crisp shadows, confident stance",
+  "Quantum sci-fi lab, holographic HUD, chrome jacket, blue RGB glow, anamorphic flare",
+  "Retro film look, halation glow, Kodak tones, vintage framing, timeless vibe",
+  "Skateboard action, dynamic motion blur, gritty grain, burst shutter, urban energy",
+  "Noir detective mood, trench coat, ember glow, shadow play, cinematic mystery",
+  "Desert road trip, aviators, dust trail, sun flare, minimalist composition",
+  "Cozy cafe portrait, tungsten warmth, knit texture, candid smile, intimate framing",
+  "Futuristic samurai, glowing katana, mist atmosphere, dramatic side light",
+  "Editorial close-up, razor-sharp eyes, microcontrast skin, neutral high-end grade",
+  "Neon market rain, translucent poncho, reflective puddles, teal-magenta split",
+  "Smart casual founder, laptop glow, minimalist office, thoughtful gaze",
+  "Harajuku pop fashion, playful pose, candy neon palette, high saturation",
+  "Beach sunrise pastel, linen shirt, natural lens flare, serene composition",
+  "Artist studio, paint splatter, rolled sleeves, warm window light, honest gaze",
+  "Futuristic aviator, gradient visor, dusk horizon, cinematic crop, silver bomber",
+  "Bookstore portrait, spectacles, warm bulbs, stacked book depth, cozy framing",
+  "Monsoon umbrella, crisp raindrops, reflective asphalt, moody blue grade",
+  "Modern monk minimalism, linen robes, soft diffused light, contemplative mood",
+  "Indo-western sherwani, embroidered detail, regal posture, soft gold light",
+  "Minimal techwear, matte textures, layered straps, cold blue palette",
+  "Skatepark kickflip, sunlit concrete, gritty grain, action freeze",
+  "Architectural symmetry, long coat, geometric frame, leading lines",
+  "Festival portrait, ethnic patterns, face paint, warm crowd bokeh",
+  "Futuristic biker, neon trails, reflective leather, RGB color split",
+  "Studio red backdrop, contrasty key light, power pose, fashion focus",
+  "Mountain trail, windbreaker, distant peaks, cool palette, breath vapor",
+  "Library sunlight shafts, tweed blazer, dust motes, amber tones",
+  "Beach club night, silk shirt, tungsten bokeh, subtle sweat highlights",
+  "Black-on-black minimal, texture contrast, sculpted light, luxury vibe",
+  "Casual streetwear, bucket hat, pastel wall, soft diffuse daylight",
+  "Cinematic rain alley, hooded silhouette, reflective neon signs",
+  "Classic biker denim, chrome details, garage light, oil sheen",
+  "Concert backstage, in-ear monitors, stage haze, magenta-blue gels",
+  "Editorial close-up, sharp catchlights, high detail pores, neutral grade",
+  "Urbancore cargo set, concrete textures, cool grey palette, negative space",
+  "Heritage panjabi fusion, modern cut, indigo dye, soft window light",
+  "Night city skyline, long coat, wind sweep, cyan-magenta split",
+  "Futuristic hacker, glowing hoodie, code backdrop, neon reflections",
+  "Asymmetric blazer editorial, statement accessories, hard light shadows",
+  "Rainy street portrait, transparent umbrella, teal-orange grade",
+  "Digital mage effect, glowing staff, fractal background, ethereal light",
+  "Charcoal turtleneck minimal, soft rim light, clean gradient backdrop",
+  "Desert explorer, robotic camel, glowing horizon, cinematic grade",
+  "Studio editorial crisp, edge light precision, sculpted jawline",
+  "Neon jungle explorer, glowing plants, cybernetic eye, trench coat"
+];
 
-        function createCard(image, prompt) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <img src="${image}" alt="Prompt Image">
-                <div class="prompt">${prompt.replace(/\n/g, '<br>')}</div>
-                <div class="actions">
-                    <button onclick="copyPrompt(this)">Copy</button>
-                    <button onclick="sharePrompt(this)">Share</button>
-                </div>
-            `;
-            return card;
-        }
+
+       function createCard(image, prompt) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <div class="thumb">
+      <img src="${image}" alt="Prompt image" loading="lazy" />
+    </div>
+    <div class="prompt-header">
+      <span class="emoji">🕺</span>
+      <span>Eye-catching prompt</span>
+    </div>
+    <div class="prompt">${nl2br(prompt)}</div>
+    <div class="actions">
+      <button class="small-btn" onclick="copyPrompt(this)">Copy</button>
+      <button class="small-btn secondary" onclick="sharePrompt(this)">Share</button>
+    </div>
+  `;
+  return card;
+}
+
 
         function addCard() {
             const imageUrl = document.getElementById('imageUrl').value;
@@ -195,6 +283,15 @@
                 gallery.appendChild(card);
             });
         };
+        // Load the additional 50 prompts with placeholder image
+(function(){
+  const placeholder = "https://via.placeholder.com/600x375?text=4D+Style";
+  newPrompts.forEach(p=>{
+    gallery.appendChild(createCard(placeholder, p));
+  });
+})();
+
     </script>
+    
 </body>
 </html>
