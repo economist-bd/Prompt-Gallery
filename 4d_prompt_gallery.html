@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4D Style Prompt Gallery</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #1e1e2f, #2e2e4f);
+            color: #fff;
+        }
+        header {
+            background: #111;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .admin-panel {
+            padding: 1rem;
+            background: #222;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .admin-panel input, .admin-panel textarea {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .admin-panel button {
+            padding: 0.5rem;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        .card {
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 300px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: scale(1.05) rotateX(5deg) rotateY(5deg);
+        }
+        .card img {
+            width: 100%;
+            height: auto;
+        }
+        .card .prompt {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            background: #444;
+        }
+        .card .actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem;
+            background: #222;
+        }
+        .card .actions button {
+            background: #555;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.7rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <header>4D Style Prompt Gallery</header>
+    <div class="admin-panel">
+        <input type="text" id="imageUrl" placeholder="Image URL">
+        <textarea id="promptText" rows="2" placeholder="Prompt with line breaks..."></textarea>
+        <button onclick="addCard()">Add Prompt Card</button>
+    </div>
+    <div class="gallery" id="gallery"></div>
+
+    <script>
+        const prompts = [
+            "A futuristic male model in neon-lit cyberpunk city",
+            "A modern man in a sleek black suit under city lights",
+            "A young man with silver hair and glowing eyes in a sci-fi lab",
+            "A stylish man in a leather jacket with a robotic arm",
+            "A male fashion model in a floating city background",
+            "A man with a holographic jacket and LED shoes",
+            "A futuristic samurai with glowing armor",
+            "A male android with chrome skin and blue eyes",
+            "A man in a digital raincoat walking in a neon alley",
+            "A modern male warrior with energy sword",
+            "A man with augmented reality glasses and cyber tattoos",
+            "A male model in a 5D fractal background",
+            "A man with a transparent jacket and glowing veins",
+            "A futuristic biker with a neon helmet",
+            "A male astronaut in a designer space suit",
+            "A man with a levitating skateboard and techwear",
+            "A male elf with cybernetic enhancements",
+            "A man in a virtual reality suit with glowing circuits",
+            "A male mage with digital spell effects",
+            "A man with a floating drone companion",
+            "A male hacker with glowing hoodie and code background",
+            "A man in a futuristic desert with robotic camel",
+            "A male model in a 3D printed outfit",
+            "A man with a plasma sword and neon cape",
+            "A male detective in a futuristic noir city",
+            "A man with a holographic pet tiger",
+            "A male ninja with light-based weapons",
+            "A man in a floating chair with AI interface",
+            "A male cyborg with mechanical wings",
+            "A man in a glowing trench coat in the rain",
+            "A male pilot in a futuristic jet cockpit",
+            "A man with a digital mask and glowing tattoos",
+            "A male wizard with a tech staff",
+            "A man in a 5D cube environment",
+            "A male model in a virtual fashion show",
+            "A man with a robotic falcon on his shoulder",
+            "A male warrior in a digital battlefield",
+            "A man with a glowing sword and shield",
+            "A male explorer in a neon jungle",
+            "A man with a cybernetic eye and trench coat",
+            "A male dancer with light trails",
+            "A man in a futuristic subway with neon ads",
+            "A male artist painting with holograms",
+            "A man with a glowing scarf and boots",
+            "A male scientist in a quantum lab",
+            "A man with a digital guitar and sound waves",
+            "A male soldier in a mech suit",
+            "A man with a floating keyboard and screens",
+            "A male monk with glowing tattoos",
+            "A man in a 4D fractal temple"
+        ];
+
+        function createCard(image, prompt) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <img src="${image}" alt="Prompt Image">
+                <div class="prompt">${prompt.replace(/\n/g, '<br>')}</div>
+                <div class="actions">
+                    <button onclick="copyPrompt(this)">Copy</button>
+                    <button onclick="sharePrompt(this)">Share</button>
+                </div>
+            `;
+            return card;
+        }
+
+        function addCard() {
+            const imageUrl = document.getElementById('imageUrl').value;
+            const promptText = document.getElementById('promptText').value;
+            if (imageUrl && promptText) {
+                const card = createCard(imageUrl, promptText);
+                document.getElementById('gallery').prepend(card);
+                document.getElementById('imageUrl').value = '';
+                document.getElementById('promptText').value = '';
+            }
+        }
+
+        function copyPrompt(btn) {
+            const text = btn.parentElement.previousElementSibling.innerText;
+            navigator.clipboard.writeText(text);
+            alert("Prompt copied!");
+        }
+
+        function sharePrompt(btn) {
+            const text = btn.parentElement.previousElementSibling.innerText;
+            if (navigator.share) {
+                navigator.share({ text });
+            } else {
+                alert("Sharing not supported on this device.");
+            }
+        }
+
+        // Load initial 50 prompts with placeholder image
+        window.onload = () => {
+            const gallery = document.getElementById('gallery');
+            prompts.forEach(p => {
+                const card = createCard("https://via.placeholder.com/300x200?text=4D+Style", p);
+                gallery.appendChild(card);
+            });
+        };
+    </script>
+</body>
+</html>
